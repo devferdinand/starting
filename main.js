@@ -13,20 +13,86 @@ class Field {
         }
         // if here then input is valid
         this.data = twoDArray;
+        this.gameOver = false;
+        this.currentRow;
+        this.currentCol;
     }
 
     // print the elements in 2-D array
     prettyPrint(){
         this.data.forEach(row => console.log(row.join(" ")));
     }
+
+    // find user location
+    findStarLocation(){
+        for(let row = 0; row < this.data.length; row++){
+            for(let col = 0; col < this.data[row].length; col++){
+                if(this.data[row][col] == pathCharacter){
+                    return {row, col};
+                }
+            }
+        }
+        return null;
+    }
+
+    // is current location hat, hole, or out-of-bounds
+    isHatHoleOOB(row, col){
+        // check for out-of-bounds
+        if(row >= this.data.length || col >= this.data[row].length || row < 0 || col < 0){
+            console.log('Out of bounds instruction');
+            this.gameOver = true;
+            return true;
+        } // check for hat
+        else if(this.data[row][col] == hat){
+            console.log('Congrats, you found your hat');
+            this.gameOver = true;
+            return true;
+        } // check for hole
+        else if(this.data[row][col] == hole){
+            console.log('Sorry, you fell down a hole');
+            this.gameOver = true;
+            return true;
+        }
+        // if here then not hat, hole, or out-of-bounds
+        return false;
+    }
+
+    // update the field
+    updateField(direction){
+        // if user wants to go right and the space is not occupied by hat, hole, or out-of-bounds
+        if(direction == 'r' && !this.isHatHoleOOB(this.currentRow, this.currentCol + 1)){
+            this.currentCol = this.currentCol+1;
+            this.data[this.currentRow][this.currentCol] = pathCharacter;
+            this.prettyPrint();
+        }
+        // logic for the rest of directions
+        // ..
+    }
+
+    // start the game
+    start(){
+        // find user whereabouts
+        const userLocation = this.findStarLocation();
+        this.currentRow = userLocation.row;
+        this.currentCol = userLocation.col;
+        // print field
+        this.prettyPrint();
+        // while game is not over
+        while(!this.gameOver){
+            // prompt user for direction
+            let userInput = prompt('Where to> ');
+            this.updateField(userInput);
+            //console.log('gameOver', this.gameOver);
+        }
+    }
 }
 
 // create an instance of the Field class
 const myField = new Field([
-    ['*', '░', 'O'],
-    ['░', 'O', '░'],
-    ['░', '^', '░']
+    [pathCharacter, fieldCharacter, hole],
+    [fieldCharacter, hole, fieldCharacter],
+    [fieldCharacter, hat, fieldCharacter]
 ])
 
-// print myField
-myField.prettyPrint();
+// start game
+myField.start();
