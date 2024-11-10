@@ -59,14 +59,31 @@ class Field {
 
     // update the field
     updateField(direction){
+        // if input is not valid, notify user with correct format
+        if(direction != 'r' && direction != 'd' && direction != 'l' && direction != 'u'){
+            console.log('That\'s not a valid input. Please use \'r\' for right, \'d\' for down, \'l\' for left, \'u\' for up');
+        }
         // if user wants to go right and the space is not occupied by hat, hole, or out-of-bounds
-        if(direction == 'r' && !this.isHatHoleOOB(this.currentRow, this.currentCol + 1)){
+        else if(direction == 'r' && !this.isHatHoleOOB(this.currentRow, this.currentCol + 1)){
             this.currentCol = this.currentCol+1;
             this.data[this.currentRow][this.currentCol] = pathCharacter;
             this.prettyPrint();
+        } // if user wants to go down and there is available space
+        else if(direction == 'd' && !this.isHatHoleOOB(this.currentRow + 1, this.currentCol)){
+            this.currentRow = this.currentRow + 1;
+            this.data[this.currentRow][this.currentCol] = pathCharacter;
+            this.prettyPrint();
+        } // if user wants to go left and there is available space
+        else if(direction == 'l' && !this.isHatHoleOOB(this.currentRow, this.currentCol - 1)){
+            this.currentCol = this.currentCol - 1;
+            this.data[this.currentRow][this.currentCol] = pathCharacter;
+            this.prettyPrint();
         }
-        // logic for the rest of directions
-        // ..
+        else if(direction == 'u' && !this.isHatHoleOOB(this.currentRow - 1, this.currentCol)){
+            this.currentRow = this.currentRow - 1;
+            this.data[this.currentRow][this.currentCol] = pathCharacter;
+            this.prettyPrint();
+        }
     }
 
     // start the game
