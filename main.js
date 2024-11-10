@@ -78,7 +78,7 @@ class Field {
             this.currentCol = this.currentCol - 1;
             this.data[this.currentRow][this.currentCol] = pathCharacter;
             this.prettyPrint();
-        }
+        } // if user wants to up and there is available space
         else if(direction == 'u' && !this.isHatHoleOOB(this.currentRow - 1, this.currentCol)){
             this.currentRow = this.currentRow - 1;
             this.data[this.currentRow][this.currentCol] = pathCharacter;
