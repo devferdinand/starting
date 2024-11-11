@@ -38,7 +38,7 @@ class Field {
     // is current location hat, hole, or out-of-bounds
     isHatHoleOOB(row, col){
         // check for out-of-bounds
-        if(row >= this.data.length || col >= this.data[row].length || row < 0 || col < 0){
+        if(row < 0 || col < 0 || row >= this.data.length || col >= this.data[row].length){
             console.log('Out of bounds instruction');
             this.gameOver = true;
             return true;
@@ -102,14 +102,72 @@ class Field {
             //console.log('gameOver', this.gameOver);
         }
     }
+
+    // generate random field based on user input for height, width, percentage
+    // percentage arg determines what percent of the field should be covered in holes
+    static generateRandomField(height, width, percentage){
+        const field = [];
+        const numOfHoles = Math.round(height * width * (percentage / 100));
+        let holesPlaced = 0;
+        let characterPlaced = 0;
+        let hatPlaced = 0;
+        console.log(numOfHoles);
+        // create the field with just fieldCharacter
+        for(let i = 0; i < height; i++){
+            field.push(new Array(width).fill(fieldCharacter));
+        }
+
+        // place the holes randomly in the field
+        while(holesPlaced < numOfHoles){
+            // generate random row and column
+            const row = Math.floor(Math.random() * height);
+            const col = Math.floor(Math.random() * width);
+
+            // check space is not already a hole
+            if(field[row][col] != hole){
+                field[row][col] = hole; // place hole
+                holesPlaced++;
+            }
+        }
+
+        // place the character randomly
+        while(characterPlaced < 1){
+            // generate random row and column
+            const row = Math.floor(Math.random() * height);
+            const col = Math.floor(Math.random() * width);
+
+            // check space is not already a hole
+            if(field[row][col] != hole){
+                field[row][col] = pathCharacter; // place character
+                characterPlaced++;
+            }
+        }
+
+        // place the hat randomly
+        while(hatPlaced < 1){
+            // generate random row and column
+            const row = Math.floor(Math.random() * height);
+            const col = Math.floor(Math.random() * width);
+
+            // check space is not already a hole and character
+            if(field[row][col] != hole && field[row][col] != pathCharacter){
+                field[row][col] = hat; // place hat
+                hatPlaced++;
+            }
+        }
+
+        // logic to make sure that pathCharacter can make it to hat (at least one path)
+        return field;
+    }
 }
 
 // create an instance of the Field class
-const myField = new Field([
+let myField = new Field([
     [pathCharacter, fieldCharacter, hole],
     [fieldCharacter, hole, fieldCharacter],
     [fieldCharacter, hat, fieldCharacter]
 ])
 
 // start game
-myField.start();
+//myField.start();
+console.log(Field.generateRandomField(5, 5, 50));
